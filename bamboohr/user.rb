@@ -10,6 +10,14 @@ module Bamboohr
       end
     end
 
+    %w|first_name last_name display_name|.each do |method|
+      define_method "find_#{method}" do |match|
+        user_collection.select do |user|
+          user.send(method) == match
+        end
+      end
+    end
+
     private
     def user_collection
       users_from_api.map do |user_attributes|
@@ -26,6 +34,7 @@ module Bamboohr
           key, value = user.fetch(:field)
           new_attributes[:first_name] = value if key.fetch(:id) == "firstName"
           new_attributes[:last_name] = value if key.fetch(:id) == "lastName"
+          new_attributes[:last_name] = value if key.fetch(:id) == "displayName"
         end
       end
       new_attributes
@@ -38,11 +47,12 @@ module Bamboohr
   end
 
   class UserObject
-    attr_reader :id, :first_name, :last_name
-    def initialize(id:, first_name:, last_name:)
+    attr_reader :id, :first_name, :last_name, :display_name
+    def initialize(id:, first_name:, last_name:, display_name:)
       @id = id
       @first_name = first_name
       @last_name = last_name
+      @display_name = display_name
     end
   end
 end
