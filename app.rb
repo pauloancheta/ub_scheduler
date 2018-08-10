@@ -1,7 +1,11 @@
 require 'sinatra'
+require 'http'
+require 'ox'
+require 'byebug'
+
 require_relative 'env' if File.exists?('env.rb')
-require_relative 'bamboohr/user'
+Dir["./bamboohr/*.rb"].each {|file| require file }
 
 get '/' do
-  Bamboohr::User.new.call
+  Bamboohr::User.new.all
 end

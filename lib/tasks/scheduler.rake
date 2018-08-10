@@ -1,6 +1,6 @@
 namespace :scheduler do
   desc "hello world"
   task :weekly do
-    puts Bamboohr::User.new.call
+    Bamboohr::User.new.all
   end
 end
