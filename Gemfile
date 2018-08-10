@@ -5,4 +5,6 @@ gem 'sinatra'
 gem 'thin'
 gem 'http'
 gem 'ox'
+gem 'json'
+
 gem 'byebug'
