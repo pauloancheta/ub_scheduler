@@ -1,5 +1,6 @@
 require 'sinatra'
-require_relative 'bamboohr/user.rb'
+require_relative 'env' if File.exists?('env.rb')
+require_relative 'bamboohr/user'
 
 get '/' do
   Bamboohr::User.new.call

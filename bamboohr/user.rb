@@ -1,7 +1,7 @@
 module Bamboohr
   class User
     def call
-      "Hello, world"
+      ENV["BAMBOO_API_KEY"]
     end
   end
 end

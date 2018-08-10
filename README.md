@@ -11,3 +11,11 @@ $ cd ub_scheduler
 $ bundle
 $ ruby app.rb
 ```
+
+### ENV secrets
+
+To create a secret file for development, create a `env.rb` file and set your secrets in there
+
+```rb
+ENV["MY_SUPER_SECRET_KEY"] = sup3rl33ts3cr3+
+```
