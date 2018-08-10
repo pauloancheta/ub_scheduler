@@ -1,26 +1,26 @@
 module Bamboohr
   class User
-    def all
-      user_collection
-    end
-
     def find(id)
-      user_collection.select do |user|
+      all.select do |user|
         user.id == id
       end
     end
 
     %w|first_name last_name display_name|.each do |method|
-      define_method "find_#{method}" do |match|
-        user_collection.select do |user|
+      define_method "find_by_#{method}" do |match|
+        all.select do |user|
           user.send(method) == match
         end
       end
     end
 
+    def all
+      @users ||= user_collection
+    end
+
     private
     def user_collection
-      users_from_api.map do |user_attributes|
+      all_from_api.map do |user_attributes|
         UserObject.new(create_user_attributes(user_attributes))
       end
     end
@@ -34,13 +34,13 @@ module Bamboohr
           key, value = user.fetch(:field)
           new_attributes[:first_name] = value if key.fetch(:id) == "firstName"
           new_attributes[:last_name] = value if key.fetch(:id) == "lastName"
-          new_attributes[:last_name] = value if key.fetch(:id) == "displayName"
+          new_attributes[:display_name] = value if key.fetch(:id) == "displayName"
         end
       end
       new_attributes
     end
 
-    def users_from_api
+    def all_from_api
       @doc ||= Api.call("employees/directory").to_s
       Ox.load(@doc, mode: :hash).dig(:directory, :employees, :employee)
     end
