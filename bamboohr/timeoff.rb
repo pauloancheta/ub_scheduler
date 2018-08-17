@@ -1,15 +1,25 @@
 module Bamboohr
   class Timeoff
     def all_from_employee_id(id)
-      time_off_collection(id).sort_by do |timeoff|
-        timeoff.start
+      results = time_off_collection(id)
+      if results.empty?
+        "result is empty"
+      else
+        results.sort_by do |timeoff|
+          timeoff.start
+        end
       end
     end
 
     private
     def time_off_collection(id)
-      find_from_api(id).map do |r|
-        create_timeoff_object(r)
+      results = find_from_api(id)
+      if results.nil?
+        []
+      else
+        results.map do |r|
+          create_timeoff_object(r)
+        end
       end
     end
 
@@ -33,8 +43,9 @@ module Bamboohr
     end
 
     def find_from_api(id)
-      @doc ||= Api.call("time_off/requests", params: {employeeId: id}).to_s
-      Ox.load(@doc, mode: :hash).dig(:requests, :request)
+      params = {employeeId: id, start: Time.now.strftime('%F')}
+      doc = Api.call("time_off/requests", params: params).to_s
+      Ox.load(doc, mode: :hash).dig(:requests, :request)
     end
   end
 
